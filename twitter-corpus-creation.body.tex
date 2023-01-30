@@ -181,6 +181,8 @@ F1 & 0.90 & 0.95  & 0.86   \\
 
 \todo{Explain what we found}
 
+
+
 \todo{Solar tweets were nearly evenly split with 47\% of the corpus being relevant and 53\% being not relevant by volume of words.}
 
 \todo{plot of relevant vs non-relevant tweets in the embedding space.}
@@ -199,8 +201,6 @@ F1 & 0.90 & 0.95  & 0.86   \\
     \label{fig:combined_embeddings}
 \end{figure*}
 
-\subsection{Solar energy case study}
-\label{sec:corpusCreation.results.solar}
 
 
 \begin{figure*}
@@ -252,8 +252,14 @@ F1 & 0.90 & 0.95  & 0.86   \\
     We show the 20 top contributing words to the difference in LabMT sentiment between the corpora.
     `Relevant' tweets, those related to clean energy are happier on average for all keywords when compared to `not relevant' tweets. 
     Sad words that are less common in `relevant' \anchor{solar} tweets are `radiation', `pressure', and `humidity', which largely refer to the weather. Happy words like `energy' and `power' are more common in `relevant' tweets compared to tweets not relevant to solar energy. For \anchor{wind} sad terms like `humidity' and `pressure' are less common in `relevant' tweets, while happy terms like `energy', `power', and `solar' are more common in tweets relevant to wind as a renewable energy source. For \anchor{nuclear}, relevant tweets are on average more positive due to sad words like `war', `weapons', and `bomb' are less common in relevant tweets, while happy words like `power' and `energy' are more common. Some sad words like `nuclear' and `waste' do occur more frequently in relevant tweets.
-  }
+  }    
+  \label{fig:combined_sentiment_shifts}
+
 \end{figure*}
+
+\subsection{Solar energy case study}
+\label{sec:corpusCreation.results.solar}
+
 
 
 
