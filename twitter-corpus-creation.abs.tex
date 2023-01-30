@@ -1,0 +1,11 @@
+The ubiquity of social media posts containing broad public opinion
+offers an alternative data source to complement some shortcomings of traditional surveys.
+While surveys collect representative samples and achieve relatively high accuracy,
+they are both expensive to run and lag public opinion by days or weeks,
+which could be overcome with a real-time data stream and fast analysis pipeline.
+One challenge in this pipeline we seek to address is selecting the best corpus of relevant documents for analysis. 
+Querying with keywords alone often includes irrelevant documents that are not easily disambiguated with bag-of-words NLP methods. 
+We explore methods of corpus curation to filter irrelevant tweets using transformer-based sentence embedding models,
+fine-tuned for our binary classification task on hand-labeled tweets,
+and achieving F1 scores of up to 97\%.
+The low cost and high performance of fine-tuning such a model suggests it should be widely adopted as a pre-processing step for social media datasets with uncertain corpus boundaries.
