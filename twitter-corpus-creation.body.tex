@@ -50,10 +50,10 @@ to increase recall at the expense of precision.
 Researchers looking to expand this set of keywords can do so algorithmically,
 or by querying individuals with domain expertise, or via a combination of the two.
 Broad expert crafted keyword lists have been used to study
-social responses to the COVID-19 pandemic~\cite{shugars2021pandemics,chen2020tracking,green2020elusive,twitter_2020}\todo{Add more examples here?}.
+social responses to the COVID-19 pandemic~\cite{shugars2021pandemics,chen2020tracking,green2020elusive,twitter_2020}%\todo{Add more examples here?}.
 Other researchers have algorithmically generated lists of keywords, e.g., using Term Frequency - Inverse Document Frequency (TF-IDF)~\cite{aizawa2003information} and word embeddings~\cite{marujo2015automatic} or
 by comparing the distribution of words in a corpus of interest to a reference corpus
-and selecting words with high rank-divergence contributions~\cite{dodds2020allotaxonometry,alshaabi2021world,minot2022distinguishing,stupinski2022quantifying}. 
+and selecting words with high rank-divergence contributions~\cite{dodds2020allotaxonometry,alshaabi2021world,minot2022distinguishing,alajajian2015,stupinski2022quantifying}. 
 Regardless of the algorithm, continued expansion beyond the most relevant keyword necessarily reduces precision. 
 Researchers can further refine the set of relevant keywords to balance precision and recall,
 or add complexity to their queries with negation or Boolean operators to require multiple keywords.
@@ -82,8 +82,8 @@ However, global embeddings average the representations of words,
 making them unsuitable for document classification
 where key terms have multiple meanings.
 The development of large pre-trained language models
-enabled high performance on downstream tasks with relatively little additional computational cost~\cite{devlin2018bert,liu2019roberta}. Such models provide contextual, rather than global, word embeddings. \todo{Is bit about sentence embeddings adding anything?}
-%CD Yes I think so please leave in
+enabled high performance on downstream tasks with relatively little additional computational cost to fine-tune~\cite{devlin2018bert,liu2019roberta}.
+Such models provide contextual, rather than global, word embeddings. 
 
 %incremental improvement in language models
 Since 2019, pre-trained language models have become less resource intensive while improving performance.
@@ -96,29 +96,55 @@ combines the benefits of masked language modeling (MLM)
 and permuted language modeling (PLM),
 better utilizing available token and position information~\cite{song2020mpnet}.  
 
+Transformer-based language models provide state of the art performance on natural language processing tasks,
+they can be difficult to understand and visualize. 
+Using twin and triplet network structures,
+pre-trained models can be trained to generate 
+semantically meaningful sentence embeddings that can be compared using cosign distances~\cite{reimers-2019-sentence-bert}.
+
+Text classification still remains a challenging task. Existing models are less successful with longer texts~\cite{gao2021limitations}. And text classification with a large number of classes remains challenging~\cite{chang2020taming}. 
+However, for the specific task of classifying tweets~\cite{antypas2022twitter}, 
+short texts limited to 280 characters, 
+as relevant or not relevant to a specific topic, 
+an instance of binary classification,
+we feel existing models are sufficiently performant.
+Sophisticated, pre-trained language models are readily accessible to researchers from Hugging Face~\cite{wolf2020transformers}
+and can be easily fine-tuned with a limited amount of labeled data~\cite{yan2018few,wang2020generalizing}.
 
 
-\todo{specifically about sentence embeddings, including different ones we tried}. 
-While transformer based language models like BERT provide state of the art performance on natural language processing tasks, they are computationally expensive to run. Creating sentence embeddings with Siamese transformer networks, promises large improvements in computational efficiency for sentence classification, while maintaining state-of-the art performance~\cite{reimers-2019-sentence-bert}.
-
-\todo{text classification for longer texts has been less successful \cite{gao2021limitations}. Text classification with a large number of classes is also challenging }\cite{gao2021limitations}\cite{chang2020taming}
-
-\todo{2 qualities of LMs enable this application, high performance, and lightweight models. BERT and other large, transformer based LMs enabled meaningful word and sentence embeddings. Knowledge distillation, means that high performance models can run on laptops. }
+%The two recent improvements in language models, 
+%their improved contextual performance and reduced model sizes, enabled by knowledge dis
 
 
+As a case study we examine online language around emission-free energy technologies. 
+In democratic societies the social perception of technologies
+affects the willingness of governments
+to extend subsidies,
+expedite permitting,
+or regulate competing energy sources, 
+ultimately effecting the energy mix of the grid. \todo{cites from Kim et al}
+Quantifying public attitudes is useful for policy makers to be responsive to public preferences
+and for science communicators to respond when public opinion doesn't reflect expert consensus.
 
-\todo{more of classifying tweets}~\cite{antypas2022twitter} ~\cite{quercia2012tweetlda}
+To quantify public perceptions of energy on social media sites,
+researchers have use a variety of methods to curate tweet corpora. 
+This could be as simple as querying for a single hashtag; Jain et. al. choose `\#RenewableEnergy'  to generate a corpus for a renewable energy classification study~\cite{jain2019sentiment}.
+Zhang et. al. query for tweets containing a list of hashtags,
+before quantifying overall attention trends and sentiment by energy source~\cite{zhang2022perceptions}.
+Li et. al. use a two-phase approach, querying for relevant hashtags, before filtering non-relevant tweets with keywords, such as those containing both `\#solar' and `eclipse', with filter keywords built on a trial-and-error approach~\cite{li2019beyondBigData}
+Alternatively, Kim et. al. use keyword phrases,
+such as `solar energy' and `solar panel', to search for relevant tweets,
+before using RoBERTa to classify sentiment~\cite{kim2021public}.
+On Reddit Kim et. al. study renewable energy discourse by collecting all messages from a particular subreddit,
+a page devoted to a topic,
+before analyzing a word co-occurrence network~\cite{kim2020exploring}.
 
-
-Today, sophisticated, pre-trained language models are readily accessible to researchers through ~\cite{wolf2020transformers}, and can be easily fine-tuned with a limited amount of labeled data, so ~\cite{yan2018few,wang2020generalizing}
-
-\todo{more on renewable energy specifically}
-\cite{kim2020exploring, jain2019sentiment}
-\cite{}
-
-
+Published studies use a wide range of corpus curation techniques
+and provide varying levels of justification for each choice.
 Although we focus on the topic of renewable energy, we hope our methods are broadly applicable
 to any text-based social media dataset.
+
+We structure the remainder of this paper as follows. In Methods and Data present a description of our dataset and discuss the task of relevance classification as it relates to corpus curation. In Results, we present case studies for the keywords \anchor{solar}, \anchor{wind}, and \anchor{nuclear}. We examine the ambient sentiment timeseries for each corpus, and compare measurements between the unfiltered, relevant and non-relevant text. To show the differences in language between these corpora, we present sentiment shift plots~\cite{gallagher2021generalized} and allotaxonographs~\cite{dodds2020allotaxonometry}. Finally, we present concluding remarks.
 
 \section{Methods and Data}
 \label{sec:corpusCreation.methods}
@@ -158,7 +184,7 @@ we provide relevant tweet IDs for rehydration.
 
 
 \subsection{Sentence embeddings}
-
+To better visualize the results of our classification algorithms, we chose pre-trained language models which had been fine-tuned to perform sentence embeddings. We found that the performance of classification was not noticeably impacted by using models trained 
 
 
 \subsection{Relevance classification}
@@ -217,13 +243,13 @@ We list the performance of the models in Table~\ref{tab:F1-scores}.
      \cmidrule(lr){2-4} 
    \% Relevant  & 43.7\% & 4.7\% & 16.0\% \\
    \midrule
-    F1 - MPNet                  & 0.951  & 0.903  & 0.860  \\
-    F1 - MiniLM-L12             & 0.933  & 0.839   & 0.879  \\
-    F1 - MiniLM-L6              & 0.949  &  0.828  & 0.857   \\
-    F1 - DistilRoberta          & 0.956  &  0.903  & 0.857  \\
-    F1 - paraphrase-MiniLM-L6   & 0.943  &  0.800  & 0.826  \\
-    F1 - paraphrase-MiniLM-L3   & 0.918  &  0.714  & 0.814  \\
-    F1 - distiluse-multilingual & 0.929  &  0.759  & 0.912  \\
+    F1 - MPNet                  & 0.951     & \textbf{0.903}  & 0.860  \\
+    F1 - MiniLM-L12             & 0.933     & 0.839   & 0.879  \\
+    F1 - MiniLM-L6              & 0.949     &  0.828  & 0.857   \\
+    F1 - DistilRoberta          & \textbf{0.956}  &  \textbf{0.903}  & 0.857  \\
+    F1 - paraphrase-MiniLM-L6   & 0.943     &  0.800  & 0.826  \\
+    F1 - paraphrase-MiniLM-L3   & 0.918     &  0.714  & 0.814  \\
+    F1 - distiluse-multilingual & 0.929     &  0.759  & \textbf{0.912}  \\
 
   \bottomrule
 \end{tabular}
@@ -244,7 +270,7 @@ for corpora with a small proportion of relevant documents, like for \anchor{wind
 \subsection{Corpus Comparison}
 
 \todo{Corpus comparison}
-To quantify the differences between the filtered, unfiltered, and re
+To quantify the differences between the filtered, unfiltered text
 
 
 
@@ -258,7 +284,7 @@ To quantify the differences between the filtered, unfiltered, and re
   \centerfloat	
         \includegraphics[width=2.8\columnwidth]{figures/combined_labeled_embedding_horizontal.png} 
   \caption{\textbf{Embedded tweet distribution plot} for the combined datasets.
-  Using a pre-trained model for semantically meaningful sentence embeddings, \texttt{all-mpnet-base-v2}, we plot the distribution of tweets within this semantic space.
+  Using a pre-trained model for semantically meaningful sentence embeddings based on MPNet, we plot the distribution of tweets within this semantic space.
   In both plots, points are tweets projected into 2D using UMAP for dimensionality reduction~\cite{mcinnes2018umap}.
   In panel A, we perform density based, hierarchical clustering using HDBSCAN and color by cluster.
   In panel B, we color by both the keyword used to query and the classification as relevant or not relevant to the topic of clean energy. 
@@ -266,20 +292,6 @@ To quantify the differences between the filtered, unfiltered, and re
     \label{fig:combined_embeddings}
 \end{figure*}
 
-
-\subsection{}
-
-
-
-
-
-
-
-
-
-
-
-\todo{Compare performance of contextual sentence embeddings to glove?}
 
 \todo{Expand on fine-tuning and classification procedure.}
 
@@ -291,23 +303,80 @@ To quantify the differences between the filtered, unfiltered, and re
 \section{Results}
 \label{sec:corpusCreation.results}
 
+We first examine our corpus within a semantically meaningful sentence embedding, shown in Fig.~\ref{fig:combined_embeddings}. 
+For each tweet
+we compute embeddings using \texttt{all-mpnet-base-v2},
+a high performing, general-purpose sentence embedding model based on MPNet. It is pre-trained to minimize cosign distance between a corpus of 1 billion paired texts and accessed using the sentence transformers python package~\cite{reimers-2019-sentence-bert}.
+We include embeddings all three corpora, anchored by the keywords \anchor{solar}, \anchor{wind}, and \anchor{nuclear}, and project into two dimensions for visualization using Uniform Manifold Approximation and Projection (UMAP) for dimensionality reduction~\cite{mcinnes2018umap}. 
+In the 2D projection, semantic distances between are distorted.
+Local relationships are preserved, but global position and structure is not. 
+
+In panel A, we perform unsupervised clustering using HDBSCAN and color by cluster~\cite{mcinnes2017hdbscan}. \todo{Add some extra here}
+
+In panel B, we show the results of our three supervised text classifiers, based on MPNet and fine-tuned on a dataset of 1000 labeled tweets for each keyword.
+The local positioning of tweets within the embedding reflects similarity in the sentence embedding space.
+Tweets classified as relevant to clean energy technologies are clustered on the right-hand side, and overlap where they are mentioned together.
+For paraphrased example tweets with each classification, refer to Table \ref{tab:example_tweets}.
+
+On the bottom third of the embedding, relevant \anchor{nuclear} tweets smoothly transition into non-relevant tweets, reflective of the occasionally blurry line between nuclear energy and weapons programs.
+
+\anchor{Solar} tweets, in contrast, are easily separable. Phrases like `solar system', `solar eclipse', and `solar opposites' are common examples usages in the not relevant tweets. These are entirely unrelated to solar energy and sentence embedding model places them in distinct spaces of the semantic space.
+
+Relevant \anchor{wind} tweets are also clearly separable from non-relevant tweets,
+which often contain phrases related to the weather,
+such as `wind storm' or `wind speed',
+or more rhetorical expressions like `wind up' or `second wind'.
+A number of weather bots regularly report wind speed measurements with a template format changing only speed and location. 
+These tweets become close neighbors in the semantic embedding and, when projected into 2D by UMAP, are split off from the larger connected component and pushed to the outer edge. 
+
+
+
+% outline figure types to present
+For each case study we compared the text in the relevant corpus to the non-relevant corpus with three figure types. 
+
+The first are ambient sentiment timeseries plots, shown in Figs. \ref{fig:solar_sentiment}, \ref{fig:wind_sentiment}, and \ref{fig:nuclear_sentiment}.
+In these plots we show dynamic changes in language use for tweets containing the selected anchor keyword over time.
+On the top panel, we show the number of n-gram tokens with LabMT sentiment scores within each time bin~\cite{dodds2011temporal}.
+In the center panel, we plot the ambient sentiment, $\Phi$, for each time bin. 
+Using a dictionary of LabMT sentiment values $\phi_{\tau}$ for each word $\tau$,
+we compute the ambient sentiment as the weighted average, 
+$$\Phi = \sum_{\tau} \phi_{\tau}p_{\tau},$$
+where $p_\tau$ is the probability or normalized frequency of occurrence. 
+In the lower panel we plot the standard deviation of ambient sentiment,
+which could help indicate when the distribution of sentiment is becoming narrower, broader, or even bimodal,
+indicating polarization.
+We plot three measurements for three corpora, 
+tweets classified as relevant (R), not relevant (NR), and the combined dataset (R + NR),
+with the latter reflecting the measurements we would have obtained without training a classifier.
+
+
+% shifterator plots
+To examine how language usage differs between the relevant and not relevant corpora,
+we present three sentiment shift plots in Fig. \ref{fig:combined_sentiment_shifts}~\cite{gallagher2021generalized}.
+Sentiment shifts allow us to visualize how words individually contribute
+to differences in average sentiment between two texts, a reference and a comparison text.
+Words that contribute to the comparison text having a higher sentiment than the reference, are shown having a positive contribution, $\delta \Phi_{\tau}$. 
+Words' bars with a higher rated sentiment score than the average of the reference text are colored yellow, or blue if lower. 
+Finally, words are ranked by the absolute value of their contribution to the difference in average sentiment, $\Phi_{avg}$, giving a list of the top contributing words.
+
+
+\todo{need to make the comparison between all three relevant corpora. put in appendix.}
+
+% allotax plots
+We further compare language usage using an allotaxonograph in Fig. \ref{fig:rankdiv_solar}, 
+an instrument that provides a rank-rank histogram of word usage 
+and a ranked list of rank divergence contributions from individual words. 
+
+
+
+We hope the following cases studies can serve as an example set of procedures and provide diagnostic tools for computational social scientists to adopt this approach to social media corpus curation.
 
 
 
 
 
-\todo{Explain what we found}
-
-
-
-\todo{Solar tweets were nearly evenly split with 47\% of the corpus being relevant and 53\% being not relevant by volume of words.}
-
-\todo{plot of relevant vs non-relevant tweets in the embedding space.}
-\todo{sentiment plot}
-
-
-
-
+\subsection{Solar Energy Case Study}
+\label{sec:corpusCreation.results.solar}
 
 
 \begin{figure}[tp!]
@@ -327,17 +396,15 @@ To quantify the differences between the filtered, unfiltered, and re
 \end{figure}
 
 
+Solar tweets were nearly evenly split with 47\% of the corpus being relevant and 53\% being not relevant by volume of words.
+It also achieved the highest classification performance, achieving an F1 score of 0.95, shown in Table \ref{tab:F1-scores}.
 
 
-
-
-\subsection{Solar Energy Case Study}
-\label{sec:corpusCreation.results.solar}
 
 Of the three case studies 
 we found the R \anchor{solar} tweets corpus evolved
 most relative to the corresponding NR corpus.
-Looking at the sentiment timeseries in Figure \ref{fig:solar_sentiment}, 
+Looking at the sentiment timeseries in Fig. \ref{fig:solar_sentiment}, 
 we see little difference between the ambient sentiment of the R and NR corpora prior to 2019.
 Before 2019, NR ambient sentiment, shown in red, sharply falls while the R corpus appears to remain on trend.
 For the standard deviation of ambient sentiment, 
@@ -362,12 +429,19 @@ it is clear that there was no dramatic drop in sentiment around \anchor{solar},
 and this language remains more positive relative to English language tweets in general. 
 The decrease in observed NR sentiment is likely related to an influx of weather bots,  
 which provide updates as often as hourly on local weather conditions
-and contain \anchor{solar} used in the context of measuring current solar radiation.
+and contain \anchor{solar} used in the context of measuring current solar radiation. 
+In Fig. \ref{fig:combined_sentiment_shifts} we see terms like `radiation', `pressure', and `humidity' are contributing to a lower average sentiment for the NR corpus.
+
+Examining Fig. \ref{fig:rankdiv_solar} we can see terms like `energy', `power', and `panels' are much more common in the R corpus, all being among the top 15 most frequently used terms. Weather related terms like `mph', `uv', `radiation', and `gust' are top words in the non-relevant corpus. 
+
+\todo{worried about redundancy with the figure caption}
+
+\todo{wrap-up for solar, what did we learn, }
 
 
 
 \subsection{Wind Energy Case Study}
-\todo{update caption for wind sentiment}
+
 \begin{figure}[tp!]
   \centering	
     \includegraphics[width=0.98\columnwidth]{figures/Wind_sentiment_2016-01-01_2022-08-30.png}  
@@ -377,10 +451,10 @@ and contain \anchor{solar} used in the context of measuring current solar radiat
     all containing the keyword \anchor{wind}.}
     In the top panel we show the number of tokens with LabMT
     sentiment scores for each corpus on each two week period~\cite{dodds2015human}.
-    `Relevant' tweets, in blue, have more than an order of magnitude fewer tokens per time window over the entire study period.
+    R tweets, in blue, have more than an order of magnitude fewer tokens per time window over the entire study period.
     The center panel shows the average sentiment for each corpus, including measurement of English language tweets as a whole in gray for comparison. 
-    Relevant \anchor{wind} tweets are more positive than Twitter on average early on, but this difference is reduced over time.
-    R tweets are also much more positive than NR tweets over most of the study period, except for a few exogenous drops in R sentiment.
+    R \anchor{wind} tweets are more positive than Twitter on average early on, but this difference is reduced over time. 
+    Because most \anchor{wind} tweets are not relevant, both the sentiment of the combined corpus closely follows the NR sentiment.
     In the bottom panel we plot the standard deviation of the sentiment measurement,
     which captures a broader distribution of sentiment scores for  `non-relevant' tweets,
     as was the case for all case-studies we examined.
@@ -395,7 +469,6 @@ The n-gram \anchor{wind} is used in many different contexts besides energy gener
 from casual discussion of today's weather to figurative uses like references to athletes getting their `second wind' and the anticipatory rotational phrase `wind up' where `wind' rhymes with `kind'. In the top panel of Figure \ref{fig:wind_sentiment}, we can see that the number of n-grams in relevant tweets with corresponding sentiment scores is consistently around $10^3$, while the NR corpus contain more than an order of magnitude more text.
 
 We found the ambient sentiment of the R \anchor{wind} corpus has been slightly more positive than average language use on Twitter. 
-\todo{whats going on with the negative spikes}
 The NR corpus had distinctly lower sentiment, but was more dynamic, rising from a low of 5.5 in 2016, to 5.9 in 2020.
 Because the proportion of tweets relevant to energy is so low, 
 the combined sentiment time series measurement is dominated by the NR corpus. 
@@ -403,10 +476,14 @@ The standard deviation of sentiment, $\sigma$, for the R corpus also increased f
 
 
 
-\todo{write about using broad keywords, low precision keywords still being viable to create corpus with ML filtering}
 
 The choice of \anchor{wind} could seem to be an irresponsible choice of keyword, 
-given that the vast majority of matching tweets are not relevant. We agree that under a paradigm  of expert-crafted lists of keywords, it isn't suitable. However, the alternative requires 
+given that the vast majority of matching tweets are not relevant.  
+Under a paradigm  of expert-crafted lists of keywords, we would agree it isn't suitable. 
+However, by choosing such a potentially ambiguous term, we're able to capture a wider range of users. 
+Those who don't wish to project their thoughts into a global conversation by attaching a hashtag, but are content with discussing among their local network are still included with this methodology. 
+Also included are users writing informally or using context of a threaded conversation, who might not use a high precision keyword phrase, like `wind power', `wind generation', or `wind energy'.
+These cases make up a significant proportion of conversation around any given topic; researchers studying more obscure topics could benefit from the increased sample size, and temporal resolution of a higher recall set of keywords.
 
 \subsection{ Nuclear Energy Case Study}
 
@@ -437,12 +514,26 @@ given that the vast majority of matching tweets are not relevant. We agree that 
 
 The \anchor{nuclear} case study had the lowest classification performance after fine-tuning, 
 achieving an F1 score of just 0.86. 
-The proportion of relevant tweets, 16\%, was higher than for the \anchor{wind} corpus, 
-we believe the performance was impacted negatively by the close proximity and overlap
+The proportion of relevant tweets, 16\%, was higher than for the \anchor{wind} corpus. 
+We believe the performance was impacted negatively by the close proximity and overlap
 of nuclear energy and nuclear weapons topics in the semantic embedding space. 
 
-The ambient sentiment timeseries for the R \anchor{nuclear} corpus was much lower than average sentiment on Twitter for the entire study period,
+% nuclear sentiment
+The ambient sentiment timeseries, in Fig. \ref{fig:nuclear_sentiment},
+for the R \anchor{nuclear} corpus was much lower than average sentiment on Twitter for the entire study period,
 but higher than the NR corpus.
+It appears that ambient sentiment around R nuclear energy tweets has been increasing, with a higher stable level since fall 2020. 
+We found that the standard deviation of sentiment is also decreasing slightly,
+though it starts from a much higher level of around 1.7, compared to less controversial technologies, wind and solar.
+
+% nuclear sentiment shift
+In Fig. \ref{fig:combined_sentiment_shifts} we can see that this difference in sentiment is driven by more positive words in the relevant corpus,
+like `power' and `energy',
+but also fewer negative words,
+like `war' and `weapons', relative to the NR corpus.
+`Waste' is a negatively scored word that used much more frequently in the R corpus relative to the NR corpus.
+
+
 
 
 \begin{figure*}
@@ -493,7 +584,6 @@ but higher than the NR corpus.
 \section{Concluding remarks}
 \label{sec:corpusCreation.concludingremarks}
 
-\todo{Bring it home.}
 
 \todo{limitations, not a representative sample, etc}
 
@@ -513,7 +603,7 @@ and infer the relevance of millions of messages on a laptop. %more here
 
 
 
-Future work could explore better sampling methods
+Future work could explore better sampling methods for humans labeling tweets
 to reduce the amount of labeled data needed to train the text classifier. 
 Sampling messages by shuffling
 risks oversampling
@@ -521,3 +611,13 @@ from dense regions of the semantic embedding space.
 The coder sees repetitive messages that provide little marginal 
 information to the model.
 This would have negative impacts on the generalizability of the classifier, and we would be skeptical of real-time measurements as conversation could drift into under-explored regions of the semantic embedding space.
+Other work could explore the trade-offs between optimizing for high recall and high precision when curating  social media datasets, and the impacts on resulting measurements. 
+
+For online applications of relevance classifiers, such work would be useful in identifying when more training data is needed. 
+By measuring changes in language use, both by measuring rank-turbulence divergence ~\cite{dodds2020allotaxonometry}
+or Jensen–Shannon divergence~\cite{dhillon2003divisive} between the training corpus and incoming data,
+and by measuring changes in the distribution of messages within a semantic embedding, thresholds for train data updates could be determined.
+
+Finally, researchers could explore viewing social media datasets as having uncertain boundaries, 
+and running measurements over data set ensembles
+to better capture the uncertainly in researcher discretion inherent in corpus curation.
